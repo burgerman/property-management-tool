@@ -1,6 +1,7 @@
 import React from 'react';
 import { Suite } from '../types';
 import { Bed, UserCheck, ShieldCheck, AlertCircle } from 'lucide-react';
+import { formatCurrency } from '../utils/formatters';
 
 interface SuiteCardProps {
   suite: Suite;
@@ -11,10 +12,6 @@ interface SuiteCardProps {
 export const SuiteCard: React.FC<SuiteCardProps> = ({ suite, onClick, onRoomClick }) => {
   const { status, suiteId, totalRooms, occupiedCount, vacantCount, rooms, totalRent } = suite;
 
-  // Determine card styling based on suite status:
-  // - Vacant: Red
-  // - Occupied: Yellow
-  // - Secured: Green
   let borderStyle = '';
   let bgStyle = '';
   let textBadgeStyle = '';
@@ -34,7 +31,6 @@ export const SuiteCard: React.FC<SuiteCardProps> = ({ suite, onClick, onRoomClic
     statusLabel = 'Secured';
     StatusIcon = ShieldCheck;
   } else {
-    // Occupied
     borderStyle = 'border-amber-500/40 hover:border-amber-400 group-hover:shadow-amber-900/20';
     bgStyle = 'bg-amber-950/30 hover:bg-amber-900/40';
     textBadgeStyle = 'bg-amber-500/20 text-amber-300 border-amber-500/30';
@@ -42,10 +38,21 @@ export const SuiteCard: React.FC<SuiteCardProps> = ({ suite, onClick, onRoomClic
     StatusIcon = UserCheck;
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      onClick(suite);
+    }
+  };
+
   return (
     <div
+      role="button"
+      tabIndex={0}
       onClick={() => onClick(suite)}
-      className={`group relative rounded-xl p-3.5 border transition-all duration-200 cursor-pointer shadow-lg hover:-translate-y-0.5 ${bgStyle} ${borderStyle}`}
+      onKeyDown={handleKeyDown}
+      aria-label={`Suite ${suiteId}, ${totalRooms} bedrooms, status ${statusLabel}`}
+      className={`group relative rounded-xl p-3.5 border transition-all duration-200 cursor-pointer shadow-lg hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-indigo-500/80 ${bgStyle} ${borderStyle}`}
     >
       {/* Suite Header */}
       <div className="flex items-center justify-between gap-2">
@@ -97,6 +104,7 @@ export const SuiteCard: React.FC<SuiteCardProps> = ({ suite, onClick, onRoomClic
                   }
                 }}
                 title={titleText}
+                aria-label={titleText}
                 className={`w-5 h-5 rounded-md text-[10px] font-bold flex items-center justify-center transition-all ${dotBg} text-slate-950`}
               >
                 {room.roomNumber}
@@ -105,10 +113,9 @@ export const SuiteCard: React.FC<SuiteCardProps> = ({ suite, onClick, onRoomClic
           })}
         </div>
 
-        {/* Rent indicator if non-zero */}
         {totalRent > 0 && (
           <span className="text-[11px] font-semibold text-slate-300">
-            ${totalRent.toLocaleString()}
+            {formatCurrency(totalRent)}
           </span>
         )}
       </div>

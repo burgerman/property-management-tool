@@ -1,24 +1,14 @@
 import { BuildingStats, Floor, Room, Suite, SuiteStatus, RoomStatus, TenantRecord } from '../types';
+import { MAX_FLOOR, MIN_FLOOR, SUITE_BEDROOM_MAP, EXCLUDED_FLOORS, EXCLUDED_SUITES, VALID_FLOORS } from '../constants/building';
 
-export const MIN_FLOOR = 3;
-export const MAX_FLOOR = 21;
-
-// Suite configuration per floor
-export const SUITE_BEDROOM_MAP: Record<string, number> = {
-  '01': 5,
-  '02': 4,
-  '03': 3,
-  '04': 3,
-  '05': 4,
-  '06': 5,
-};
+export { MIN_FLOOR, MAX_FLOOR, SUITE_BEDROOM_MAP, EXCLUDED_FLOORS, EXCLUDED_SUITES, VALID_FLOORS };
 
 /**
-  Parse a unit string like "0301-1" or "301-1" or "2105-3"
+ * Parse a unit string like "0301-1" or "301-1" or "2105-3"
  */
 export function parseUnitId(unitStr: string): { floorNumber: number; suiteId: string; roomNumber: number } | null {
   if (!unitStr) return null;
-  
+
   const clean = unitStr.trim();
   const parts = clean.split('-');
   if (parts.length !== 2) return null;
@@ -30,12 +20,14 @@ export function parseUnitId(unitStr: string): { floorNumber: number; suiteId: st
 
   // Standardize suiteCode to 4 digits if 3 digits (e.g. "301" -> "0301")
   const paddedSuite = suiteCode.padStart(4, '0');
-  
+
   // First 2 digits = floor, Last 2 digits = suite index (01-06)
   const floorNum = parseInt(paddedSuite.substring(0, 2), 10);
   const suiteIdx = paddedSuite.substring(2, 4);
 
   if (floorNum < MIN_FLOOR || floorNum > MAX_FLOOR) return null;
+  if (EXCLUDED_FLOORS.includes(floorNum)) return null; // Reject units on excluded floors (e.g. 13th floor)
+  if (EXCLUDED_SUITES.includes(paddedSuite)) return null; // Reject units in physically excluded suites (e.g. Suite 0304)
   if (!SUITE_BEDROOM_MAP[suiteIdx]) return null;
 
   const maxRooms = SUITE_BEDROOM_MAP[suiteIdx];
@@ -65,7 +57,6 @@ export function buildBuildingState(tenants: TenantRecord[]): { floors: Floor[]; 
     if (!tenant.unit) return;
     const parsed = parseUnitId(tenant.unit);
     if (parsed) {
-      // Key format e.g. "0301-1"
       const normalizedKey = `${parsed.suiteId}-${parsed.roomNumber}`;
       tenantMap.set(normalizedKey, tenant);
     }
@@ -83,8 +74,8 @@ export function buildBuildingState(tenants: TenantRecord[]): { floors: Floor[]; 
   let securedSuitesCount = 0;
   let totalRoomsCount = 0;
 
-  // Build floors top-down: 21 down to 3
-  for (let f = MAX_FLOOR; f >= MIN_FLOOR; f--) {
+  // Build physical floors top-down using VALID_FLOORS array (excluding omitted floors like 13)
+  for (const f of VALID_FLOORS) {
     const floorStr = formatFloor(f);
     const suites: Suite[] = [];
     let floorOccupied = 0;
@@ -94,6 +85,12 @@ export function buildBuildingState(tenants: TenantRecord[]): { floors: Floor[]; 
 
     for (const [suiteIdx, bedroomCount] of Object.entries(SUITE_BEDROOM_MAP)) {
       const suiteId = `${floorStr}${suiteIdx}`;
+
+      // Skip physically excluded suites (e.g. Suite 0304)
+      if (EXCLUDED_SUITES.includes(suiteId)) {
+        continue;
+      }
+
       const rooms: Room[] = [];
       let occupiedCount = 0;
       let securedCount = 0;
@@ -133,10 +130,6 @@ export function buildBuildingState(tenants: TenantRecord[]): { floors: Floor[]; 
       floorVacant += vacantCount;
       floorRoomsCount += bedroomCount;
 
-      // Determine suite status:
-      // - Vacant (Red): No rooms occupied or secured (0 occupied, 0 secured)
-      // - Secured (Green): Rooms are secured or signed, and no rooms currently occupied OR 100% occupied/secured with no vacancies
-      // - Occupied (Yellow): At least one room currently occupied
       let suiteStatus: SuiteStatus = 'vacant';
       if (occupiedCount > 0) {
         suiteStatus = 'occupied';
@@ -185,7 +178,6 @@ export function buildBuildingState(tenants: TenantRecord[]): { floors: Floor[]; 
   const totalOccupiedAndSecuredRooms = totalOccupiedRooms + totalSecuredRooms;
   const averageRoomRent = totalOccupiedAndSecuredRooms > 0 ? Math.round(totalMonthlyRevenue / totalOccupiedAndSecuredRooms) : 0;
 
-  // Compute breakdown by suite bedroom type (5 Bedrooms, 4 Bedrooms, 3 Bedrooms)
   const bedroomTypes = [
     { type: '5-Bedroom Suites (01 & 06)', count: 5 },
     { type: '4-Bedroom Suites (02 & 05)', count: 4 },
@@ -230,7 +222,7 @@ export function buildBuildingState(tenants: TenantRecord[]): { floors: Floor[]; 
   });
 
   const stats: BuildingStats = {
-    totalFloors: MAX_FLOOR - MIN_FLOOR + 1,
+    totalFloors: VALID_FLOORS.length,
     totalSuites: totalSuitesCount,
     totalRooms: totalRoomsCount,
     occupiedRooms: totalOccupiedRooms,

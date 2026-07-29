@@ -8,12 +8,18 @@ interface TenantDetailModalProps {
   onClose: () => void;
 }
 
+function safeString(val: unknown, fallback: string = ''): string {
+  if (val === undefined || val === null) return fallback;
+  if (typeof val === 'object') return JSON.stringify(val);
+  return String(val);
+}
+
 export const TenantDetailModal: React.FC<TenantDetailModalProps> = ({ tenant, onClose }) => {
   if (!tenant) return null;
 
   // Build key-value list dynamically based on workbook columns (extraFields)
   // Fallback to tenant object entries if extraFields not populated
-  let dynamicEntries: [string, any][] = [];
+  let dynamicEntries: [string, unknown][] = [];
 
   if (tenant.extraFields && Object.keys(tenant.extraFields).length > 0) {
     dynamicEntries = Object.entries(tenant.extraFields);
@@ -30,14 +36,14 @@ export const TenantDetailModal: React.FC<TenantDetailModalProps> = ({ tenant, on
       ['Lease Start Date', tenant.leaseStartDate],
       ['Lease End Date', tenant.leaseEndDate],
       ['Status', tenant.status || 'Occupied'],
-    ].filter(([, val]) => val !== undefined && val !== null && val !== '') as [string, any][];
+    ].filter(([, val]) => val !== undefined && val !== null && val !== '') as [string, unknown][];
   }
 
   // Display Name header
-  const displayName = tenant.name || tenant.extraFields?.Name || tenant.extraFields?.name || `Tenant (${tenant.unit})`;
-  const displayStatus = tenant.status || tenant.extraFields?.Status || tenant.extraFields?.status || 'Occupied';
-  const displayUnit = tenant.unit || tenant.extraFields?.Unit || tenant.extraFields?.unit || '';
-  const displayTenantId = tenant.tenantId || tenant.extraFields?.['Tenant ID'] || tenant.extraFields?.tenantId || '';
+  const displayName = tenant.name || safeString(tenant.extraFields?.Name || tenant.extraFields?.name, `Tenant (${tenant.unit})`);
+  const displayStatus = tenant.status || safeString(tenant.extraFields?.Status || tenant.extraFields?.status, 'Occupied');
+  const displayUnit = tenant.unit || safeString(tenant.extraFields?.Unit || tenant.extraFields?.unit, '');
+  const displayTenantId = tenant.tenantId || safeString(tenant.extraFields?.['Tenant ID'] || tenant.extraFields?.tenantId, '');
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
@@ -81,6 +87,7 @@ export const TenantDetailModal: React.FC<TenantDetailModalProps> = ({ tenant, on
           <button
             onClick={onClose}
             className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all"
+            aria-label="Close tenant details modal"
           >
             <X className="w-5 h-5" />
           </button>
@@ -101,7 +108,7 @@ export const TenantDetailModal: React.FC<TenantDetailModalProps> = ({ tenant, on
           {/* Dynamic Grid of All Workbook Columns */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
             {dynamicEntries.map(([colName, rawVal]) => {
-              const valStr = typeof rawVal === 'object' ? JSON.stringify(rawVal) : String(rawVal);
+              const valStr = safeString(rawVal);
               const isEmail = colName.toLowerCase().includes('email') || valStr.includes('@');
               const isPhone = colName.toLowerCase().includes('phone') || colName.toLowerCase().includes('mobile');
               const isRent = colName.toLowerCase().includes('rent') || colName.toLowerCase().includes('amount') || colName.toLowerCase().includes('price');
@@ -133,7 +140,7 @@ export const TenantDetailModal: React.FC<TenantDetailModalProps> = ({ tenant, on
                         <Phone className="w-3 h-3" />
                         {valStr}
                       </a>
-                    ) : isRent && !valStr.startsWith('$') ? (
+                    ) : isRent && !valStr.startsWith('$') && !isNaN(parseFloat(valStr)) ? (
                       <span className="text-emerald-400 font-bold font-['Space_Grotesk'] text-sm">
                         ${parseFloat(valStr).toLocaleString()}
                       </span>

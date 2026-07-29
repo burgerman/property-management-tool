@@ -15,7 +15,7 @@ export interface TenantRecord {
   leaseStartDate: string; // e.g. "2025-09-01"
   leaseEndDate: string;   // e.g. "2026-08-31"
   status?: string;        // e.g. "Occupied" or "Secured"
-  extraFields?: Record<string, any>; // Stores all dynamic raw key-value pairs from Excel row
+  extraFields?: Record<string, unknown>; // Stores all dynamic raw key-value pairs from Excel row
 }
 
 export interface Room {

@@ -1,6 +1,7 @@
 import * as XLSX from 'xlsx';
 import { ExcelParseResult, TenantRecord } from '../types';
 import { parseUnitId } from '../utils/buildingLayout';
+import { formatDate, getErrorMessage } from '../utils/formatters';
 
 /**
  * Flexible column key normalization helper
@@ -33,7 +34,7 @@ export async function parseExcelFile(file: File): Promise<ExcelParseResult> {
     const worksheet = workbook.Sheets[firstSheetName];
 
     // Convert sheet to JSON rows
-    const rawRows: any[] = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+    const rawRows: Record<string, unknown>[] = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
 
     if (!rawRows || rawRows.length === 0) {
       return { tenants: [], errors: ['Excel sheet is empty.'], warnings: [], totalRowsProcessed: 0 };
@@ -46,7 +47,7 @@ export async function parseExcelFile(file: File): Promise<ExcelParseResult> {
       const rowNum = index + 2; // 1-indexed header is row 1
 
       // Map headers dynamically
-      const rowMap: Record<string, any> = {};
+      const rowMap: Record<string, unknown> = {};
       Object.keys(row).forEach((key) => {
         rowMap[normalizeHeader(key)] = row[key];
       });
@@ -95,20 +96,12 @@ export async function parseExcelFile(file: File): Promise<ExcelParseResult> {
       const rentRaw = rowMap['rent'] || rowMap['monthlyrent'] || rowMap['rentamount'] || 0;
       const rent = parseFloat(String(rentRaw).replace(/[^0-9.]/g, '')) || 0;
 
-      const parseDate = (val: any, fallback: string) => {
-        if (!val) return fallback;
-        if (val instanceof Date) {
-          return val.toISOString().split('T')[0];
-        }
-        return String(val).trim();
-      };
-
-      const leaseStart = parseDate(
+      const leaseStart = formatDate(
         rowMap['leasestartdate'] || rowMap['leasestart'] || rowMap['startdate'],
         '2025-09-01'
       );
 
-      const leaseEnd = parseDate(
+      const leaseEnd = formatDate(
         rowMap['leaseenddate'] || rowMap['leaseend'] || rowMap['enddate'],
         '2026-08-31'
       );
@@ -118,13 +111,12 @@ export async function parseExcelFile(file: File): Promise<ExcelParseResult> {
       ).trim();
 
       // Store all original key-value pairs from the row for dynamic display
-      const extraFields: Record<string, any> = {};
+      const extraFields: Record<string, unknown> = {};
       Object.keys(row).forEach((originalKey) => {
         const val = row[originalKey];
         if (val !== undefined && val !== null && val !== '') {
-          // Format Date instances cleanly
           if (val instanceof Date) {
-            extraFields[originalKey] = val.toISOString().split('T')[0];
+            extraFields[originalKey] = formatDate(val);
           } else {
             extraFields[originalKey] = val;
           }
@@ -152,10 +144,10 @@ export async function parseExcelFile(file: File): Promise<ExcelParseResult> {
       warnings,
       totalRowsProcessed: processedCount,
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
     return {
       tenants: [],
-      errors: [`Failed to parse Excel file: ${err.message || 'Unknown error'}`],
+      errors: [`Failed to parse Excel file: ${getErrorMessage(err)}`],
       warnings: [],
       totalRowsProcessed: 0,
     };

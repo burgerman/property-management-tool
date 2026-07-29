@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { ActiveTab, Room, Suite, TenantRecord } from './types';
+import { ActiveTab, ExcelParseResult, Room, Suite, TenantRecord } from './types';
 import { generateSampleTenants } from './services/sampleData';
 import { buildBuildingState } from './utils/buildingLayout';
 import { exportSampleExcel } from './services/excelParser';
@@ -38,7 +38,7 @@ export const App: React.FC = () => {
   };
 
   // Excel Uploaded Handler
-  const handleDataLoaded = (result: any, uploadedFileName: string) => {
+  const handleDataLoaded = (result: ExcelParseResult, uploadedFileName: string) => {
     setTenants(result.tenants);
     setIsCustomData(true);
     setFileName(uploadedFileName);
