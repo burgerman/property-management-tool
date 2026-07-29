@@ -55,42 +55,42 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Center: Navigation Tabs (Single Responsibility Views) */}
-        <nav className="flex items-center bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 self-center md:self-auto shadow-inner">
+        {/* Center: Navigation Tabs */}
+        <nav className="flex items-center bg-slate-900/90 p-1 rounded-xl border border-slate-800 self-center md:self-auto">
           <button
             onClick={() => setActiveTab('layout')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
               activeTab === 'layout'
-                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
             }`}
           >
-            <Building2 className="w-4 h-4" />
+            <Building2 className="w-3.5 h-3.5" />
             <span>Building Layout</span>
           </button>
 
           <button
             onClick={() => setActiveTab('statistics')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
               activeTab === 'statistics'
-                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
             }`}
           >
-            <PieChart className="w-4 h-4" />
-            <span>Statistics & Analytics</span>
+            <PieChart className="w-3.5 h-3.5" />
+            <span>Statistics</span>
           </button>
 
           <button
             onClick={() => setActiveTab('excel')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
               activeTab === 'excel'
-                ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                ? 'bg-indigo-600 text-white shadow-md'
                 : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
             }`}
           >
-            <FileSpreadsheet className="w-4 h-4" />
-            <span>Excel Data Source</span>
+            <FileSpreadsheet className="w-3.5 h-3.5" />
+            <span>Excel Data</span>
           </button>
         </nav>
 

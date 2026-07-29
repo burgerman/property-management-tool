@@ -73,8 +73,17 @@ function generateTestData() {
         const email = `${fn.toLowerCase()}.${ln.toLowerCase()}${f}${r}@management-test.com`;
         const phone = `555-${(200 + (f * 7 + r * 3) % 700).toString()}-${(1000 + (tenantCounter % 8999)).toString()}`;
         const birthYear = 1993 + ((f + r * 2) % 12);
-        const rent = 850 + f * 20 + r * 30;
-        const status = isSecuredSuite ? 'Secured' : 'Occupied';
+        const rent = Number((850.50 + f * 20.25 + r * 30.75).toFixed(2));
+        // Status logic aligned with new unit color rules:
+        // - Vacant (Red): T-Code and Name empty OR Status 'Notice'
+        // - Occupied (Yellow): T-Code and Name not empty AND Status 'Current'
+        // - Secured (Green): T-Code/Name present AND Status 'Future'
+        let status = 'Current';
+        if (isSecuredSuite) {
+          status = 'Future';
+        } else if (r === 2 && (f + suiteNum) % 4 === 0) {
+          status = 'Notice';
+        }
 
         const month = ((f + r) % 12) + 1;
         const monthStr = month.toString().padStart(2, '0');
@@ -83,7 +92,7 @@ function generateTestData() {
 
         rows.push({
           'Unit': `${suiteId}-${r}`,
-          'Tenant ID': `T${tenantCounter}`,
+          'T-Code': `T${tenantCounter}`,
           'Name': `${fn} ${ln}`,
           'Email': email,
           'Phone': phone,
@@ -97,6 +106,20 @@ function generateTestData() {
     }
   }
 
+  // Add explicit test rows for empty T-Code & Name vacant units
+  rows.push({
+    'Unit': '0503-1',
+    'T-Code': '',
+    'Name': '',
+    'Email': '',
+    'Phone': '',
+    'Birth Year': '',
+    'Rent': 0,
+    'Lease Start Date': '',
+    'Lease End Date': '',
+    'Status': '',
+  });
+
   return rows;
 }
 
@@ -107,7 +130,7 @@ const worksheet = XLSX.utils.json_to_sheet(data);
 // Formatting column widths
 worksheet['!cols'] = [
   { wch: 12 }, // Unit
-  { wch: 14 }, // Tenant ID
+  { wch: 14 }, // T-Code
   { wch: 22 }, // Name
   { wch: 32 }, // Email
   { wch: 16 }, // Phone

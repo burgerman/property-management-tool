@@ -74,13 +74,20 @@ export async function parseExcelFile(file: File): Promise<ExcelParseResult> {
         return;
       }
 
-      const tenantId = String(
-        rowMap['tenantid'] || rowMap['tenant'] || rowMap['id'] || `T${1000 + index}`
-      ).trim();
+      const tenantIdVal =
+        rowMap['tcode'] ||
+        rowMap['tenantid'] ||
+        rowMap['tenant'] ||
+        rowMap['id'] ||
+        '';
+      const tenantId = String(tenantIdVal).trim();
 
-      const name = String(
-        rowMap['name'] || rowMap['tenantname'] || rowMap['fullname'] || 'Unnamed Tenant'
-      ).trim();
+      const nameVal =
+        rowMap['name'] ||
+        rowMap['tenantname'] ||
+        rowMap['fullname'] ||
+        '';
+      const name = String(nameVal).trim();
 
       const email = String(
         rowMap['email'] || rowMap['emailaddress'] || ''
@@ -106,9 +113,12 @@ export async function parseExcelFile(file: File): Promise<ExcelParseResult> {
         '2026-08-31'
       );
 
-      const status = String(
-        rowMap['status'] || rowMap['moveinstatus'] || rowMap['occupancystatus'] || 'Occupied'
-      ).trim();
+      const statusVal =
+        rowMap['status'] ||
+        rowMap['moveinstatus'] ||
+        rowMap['occupancystatus'] ||
+        '';
+      const status = String(statusVal).trim();
 
       // Store all original key-value pairs from the row for dynamic display
       const extraFields: Record<string, unknown> = {};
@@ -160,7 +170,7 @@ export async function parseExcelFile(file: File): Promise<ExcelParseResult> {
 export function exportSampleExcel(tenants: TenantRecord[]) {
   const exportData = tenants.map((t) => ({
     'Unit': t.unit,
-    'Tenant ID': t.tenantId,
+    'T-Code': t.tenantId,
     'Name': t.name,
     'Email': t.email,
     'Phone': t.phone,
@@ -168,7 +178,7 @@ export function exportSampleExcel(tenants: TenantRecord[]) {
     'Rent': t.rent,
     'Lease Start Date': t.leaseStartDate,
     'Lease End Date': t.leaseEndDate,
-    'Status': t.status || 'Occupied',
+    'Status': t.status || 'Current',
   }));
 
   const worksheet = XLSX.utils.json_to_sheet(exportData);

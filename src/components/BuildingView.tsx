@@ -47,10 +47,10 @@ export const BuildingView: React.FC<BuildingViewProps> = ({
           </div>
           <div>
             <h2 className="text-lg font-bold text-white font-['Space_Grotesk']">
-              Building Elevation Overview
+              Building Layout
             </h2>
             <p className="text-xs text-slate-400">
-              Floors 21 (Penthouse) down to 3 (Bottom) • Click any suite card for room details
+              Floors 21 down to 3
             </p>
           </div>
         </div>

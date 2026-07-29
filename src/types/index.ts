@@ -6,7 +6,7 @@ export type ActiveTab = 'layout' | 'statistics' | 'excel';
 
 export interface TenantRecord {
   unit: string;           // e.g. "0301-1"
-  tenantId: string;       // e.g. "T100245"
+  tenantId: string;       // T-Code (e.g. "T100245")
   name: string;           // e.g. "John Smith"
   email: string;          // e.g. "john@email.com"
   phone: string;          // e.g. "555-123-4567"
@@ -14,7 +14,7 @@ export interface TenantRecord {
   rent: number;           // e.g. 950
   leaseStartDate: string; // e.g. "2025-09-01"
   leaseEndDate: string;   // e.g. "2026-08-31"
-  status?: string;        // e.g. "Occupied" or "Secured"
+  status?: string;        // e.g. "Notice", "Current", "Future"
   extraFields?: Record<string, unknown>; // Stores all dynamic raw key-value pairs from Excel row
 }
 

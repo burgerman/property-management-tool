@@ -61,15 +61,15 @@ export function generateSampleTenants(): TenantRecord[] {
         const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}${r}@${EMAIL_DOMAINS[domainIdx]}`;
         const phone = `555-${(100 + (f * 3 + r) % 899).toString()}-${(1000 + (tenantIdCounter % 8999)).toString()}`;
         const birthYear = 1992 + ((f * 3 + r * 7) % 12); // Ages ~22-34
-        const baseRent = 850 + (f * 15) + (r * 25);
-        const rent = Math.round(baseRent / 25) * 25; // Round to nearest 25
+        const baseRent = 850.50 + (f * 15.25) + (r * 25.75);
+        const rent = Number(baseRent.toFixed(2));
 
         const startYear = 2025;
         const startMonth = ((f + r) % 12) + 1;
         const leaseStart = `${startYear}-${startMonth.toString().padStart(2, '0')}-01`;
         const leaseEnd = `${startYear + 1}-${startMonth.toString().padStart(2, '0')}-31`;
 
-        const status = isSecuredSuite ? 'Secured' : 'Occupied';
+        const status = isSecuredSuite ? 'Future' : (r === 2 && f % 3 === 0) ? 'Notice' : 'Current';
 
         tenants.push({
           unit: `${suiteId}-${r}`,

@@ -48,6 +48,64 @@ export function formatFloor(floorNum: number): string {
 }
 
 /**
+ * Determine unit/room occupancy status ('vacant' | 'occupied' | 'secured') and color labelling
+ * based on row fields 'T-Code', 'Name', and 'Status':
+ * - Vacant (Red): Check 'T-Code' & 'Name' first. If both empty or "", unit is vacant.
+ *   Otherwise check 'status': if it's 'Notice', unit is vacant.
+ * - Occupied (Yellow): Check 'T-Code' & 'Name' first. If both are NOT empty or "",
+ *   then check 'status': if it's 'Current', unit is occupied.
+ * - Secured (Green): Check 'T-Code' & 'Name' first. If at least one of them is NOT empty or "",
+ *   then check 'Status': if it's 'Future', unit is secured.
+ */
+export function determineUnitStatus(
+  tCode?: string,
+  name?: string,
+  rawStatus?: string
+): RoomStatus {
+  const cleanTCode = (tCode || '').trim();
+  const cleanName = (name || '').trim();
+  const cleanStatus = (rawStatus || '').trim().toLowerCase();
+
+  const isTCodeEmpty = cleanTCode === '' || cleanTCode === '-';
+  const isNameEmpty = cleanName === '' || cleanName === '-';
+
+  // 1. Vacant unit logic (Red):
+  // Check 'T-Code' and 'Name' of the row first, if they both empty or "",
+  // the unit should be vacant in red color; otherwise check the field 'status',
+  // if it's 'Notice', then the unit should be vacant in red color as well.
+  if ((isTCodeEmpty && isNameEmpty) || cleanStatus === 'notice') {
+    return 'vacant';
+  }
+
+  // 2. Occupied unit logic (Yellow):
+  // Check the fields 'T-Code' and 'Name' of the row first, if they are not empty or "",
+  // then check the field 'status', if it's 'Current', then the unit should be occupied in yellow color.
+  if (!isTCodeEmpty && !isNameEmpty && cleanStatus === 'current') {
+    return 'occupied';
+  }
+
+  // 3. Secured unit logic (Green):
+  // Check the fields 'T-Code' and 'Name' of the row first, if at least one of them is not empty or "",
+  // then check the field 'Status', if its value is 'Future', then the unit should be secured in green color.
+  if ((!isTCodeEmpty || !isNameEmpty) && cleanStatus === 'future') {
+    return 'secured';
+  }
+
+  // Fallbacks for legacy/direct status values
+  if (cleanStatus === 'occupied') {
+    return 'occupied';
+  }
+  if (cleanStatus === 'secured') {
+    return 'secured';
+  }
+  if (cleanStatus === 'vacant') {
+    return 'vacant';
+  }
+
+  return 'vacant';
+}
+
+/**
  * Build complete building layout with tenant data mapped to rooms
  */
 export function buildBuildingState(tenants: TenantRecord[]): { floors: Floor[]; stats: BuildingStats } {
@@ -103,15 +161,22 @@ export function buildBuildingState(tenants: TenantRecord[]): { floors: Floor[]; 
 
         let roomStatus: RoomStatus = 'vacant';
         if (tenant) {
-          suiteRent += tenant.rent || 0;
-          totalMonthlyRevenue += tenant.rent || 0;
-          const statusLower = (tenant.status || '').toLowerCase();
-          if (statusLower.includes('secured') || statusLower.includes('pending') || statusLower.includes('signed')) {
-            roomStatus = 'secured';
+          const tCode = tenant.tenantId || '';
+          const tName = tenant.name || '';
+          const tStatus = tenant.status || '';
+
+          roomStatus = determineUnitStatus(tCode, tName, tStatus);
+
+          if (roomStatus === 'occupied') {
+            suiteRent += tenant.rent || 0;
+            totalMonthlyRevenue += tenant.rent || 0;
+            occupiedCount++;
+          } else if (roomStatus === 'secured') {
+            suiteRent += tenant.rent || 0;
+            totalMonthlyRevenue += tenant.rent || 0;
             securedCount++;
           } else {
-            roomStatus = 'occupied';
-            occupiedCount++;
+            vacantCount++;
           }
         } else {
           vacantCount++;
@@ -176,7 +241,7 @@ export function buildBuildingState(tenants: TenantRecord[]): { floors: Floor[]; 
   const occupancyRate = totalRoomsCount > 0 ? Math.round(((totalOccupiedRooms + totalSecuredRooms) / totalRoomsCount) * 100) : 0;
 
   const totalOccupiedAndSecuredRooms = totalOccupiedRooms + totalSecuredRooms;
-  const averageRoomRent = totalOccupiedAndSecuredRooms > 0 ? Math.round(totalMonthlyRevenue / totalOccupiedAndSecuredRooms) : 0;
+  const averageRoomRent = totalOccupiedAndSecuredRooms > 0 ? Number((totalMonthlyRevenue / totalOccupiedAndSecuredRooms).toFixed(2)) : 0;
 
   const bedroomTypes = [
     { type: '5-Bedroom Suites (01 & 06)', count: 5 },

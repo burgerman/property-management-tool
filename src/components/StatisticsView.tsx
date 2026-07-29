@@ -91,7 +91,7 @@ export const StatisticsView: React.FC<StatisticsViewProps> = ({ stats, floors })
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-rose-400 font-bold text-sm font-['Space_Grotesk']">
               <Home className="w-5 h-5 text-rose-400" />
-              <span>Vacant Units (Red Indicator)</span>
+              <span>Vacant Units</span>
             </div>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
               {vacantSuitePct}% of Suites
@@ -104,7 +104,7 @@ export const StatisticsView: React.FC<StatisticsViewProps> = ({ stats, floors })
                 {stats.vacantSuitesCount} <span className="text-sm font-semibold text-slate-400">Suites</span>
               </div>
               <p className="text-xs text-rose-300 font-medium mt-1">
-                {stats.vacantRooms} vacant rooms available for lease
+                {stats.vacantRooms} vacant rooms
               </p>
             </div>
             <div className="text-right">
@@ -122,9 +122,6 @@ export const StatisticsView: React.FC<StatisticsViewProps> = ({ stats, floors })
               style={{ width: `${vacantRoomPct}%` }}
             ></div>
           </div>
-          <p className="text-[11px] text-slate-400 mt-2">
-            0 rooms occupied or secured in these suites.
-          </p>
         </div>
 
         {/* Occupied Units Card (Yellow) */}
@@ -132,7 +129,7 @@ export const StatisticsView: React.FC<StatisticsViewProps> = ({ stats, floors })
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-amber-400 font-bold text-sm font-['Space_Grotesk']">
               <Users className="w-5 h-5 text-amber-400" />
-              <span>Occupied Units (Yellow Indicator)</span>
+              <span>Occupied Units</span>
             </div>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
               {occupiedSuitePct}% of Suites
@@ -145,7 +142,7 @@ export const StatisticsView: React.FC<StatisticsViewProps> = ({ stats, floors })
                 {stats.occupiedSuitesCount} <span className="text-sm font-semibold text-slate-400">Suites</span>
               </div>
               <p className="text-xs text-amber-300 font-medium mt-1">
-                {stats.occupiedRooms} active resident tenants
+                {stats.occupiedRooms} active tenants
               </p>
             </div>
             <div className="text-right">
@@ -163,9 +160,6 @@ export const StatisticsView: React.FC<StatisticsViewProps> = ({ stats, floors })
               style={{ width: `${occupiedRoomPct}%` }}
             ></div>
           </div>
-          <p className="text-[11px] text-slate-400 mt-2">
-            At least one active tenant living in suite.
-          </p>
         </div>
 
         {/* Secured Units Card (Green) */}
@@ -173,7 +167,7 @@ export const StatisticsView: React.FC<StatisticsViewProps> = ({ stats, floors })
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm font-['Space_Grotesk']">
               <ShieldCheck className="w-5 h-5 text-emerald-400" />
-              <span>Secured Units (Green Indicator)</span>
+              <span>Secured Units</span>
             </div>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
               {securedSuitePct}% of Suites
@@ -186,7 +180,7 @@ export const StatisticsView: React.FC<StatisticsViewProps> = ({ stats, floors })
                 {stats.securedSuitesCount} <span className="text-sm font-semibold text-slate-400">Suites</span>
               </div>
               <p className="text-xs text-emerald-300 font-medium mt-1">
-                {stats.securedRooms} signed leases / pending move-in
+                {stats.securedRooms} signed / pending
               </p>
             </div>
             <div className="text-right">
@@ -204,9 +198,6 @@ export const StatisticsView: React.FC<StatisticsViewProps> = ({ stats, floors })
               style={{ width: `${securedRoomPct}%` }}
             ></div>
           </div>
-          <p className="text-[11px] text-slate-400 mt-2">
-            Lease signed prior to tenant move-in date.
-          </p>
         </div>
       </div>
 

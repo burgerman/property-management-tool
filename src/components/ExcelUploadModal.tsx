@@ -203,9 +203,9 @@ export const ExcelUploadModal: React.FC<ExcelUploadModalProps> = ({
                     <td className="py-1 px-2 text-slate-400">Room Identifier (Floor + Suite + Room)</td>
                   </tr>
                   <tr>
-                    <td className="py-1 px-2 font-mono text-indigo-300">Tenant ID</td>
+                    <td className="py-1 px-2 font-mono text-indigo-300">T-Code</td>
                     <td className="py-1 px-2">T100245</td>
-                    <td className="py-1 px-2 text-slate-400">Unique tenant code</td>
+                    <td className="py-1 px-2 text-slate-400">Tenant ID code</td>
                   </tr>
                   <tr>
                     <td className="py-1 px-2 font-mono text-indigo-300">Name</td>
@@ -213,24 +213,14 @@ export const ExcelUploadModal: React.FC<ExcelUploadModalProps> = ({
                     <td className="py-1 px-2 text-slate-400">Full tenant name</td>
                   </tr>
                   <tr>
-                    <td className="py-1 px-2 font-mono text-indigo-300">Email</td>
-                    <td className="py-1 px-2">john@email.com</td>
-                    <td className="py-1 px-2 text-slate-400">Contact email address</td>
-                  </tr>
-                  <tr>
-                    <td className="py-1 px-2 font-mono text-indigo-300">Phone</td>
-                    <td className="py-1 px-2">555-123-4567</td>
-                    <td className="py-1 px-2 text-slate-400">Contact phone number</td>
+                    <td className="py-1 px-2 font-mono text-indigo-300">Status</td>
+                    <td className="py-1 px-2">Current / Future / Notice</td>
+                    <td className="py-1 px-2 text-slate-400">Occupancy Status (Current = Yellow, Future = Green, Notice = Red)</td>
                   </tr>
                   <tr>
                     <td className="py-1 px-2 font-mono text-indigo-300">Rent</td>
                     <td className="py-1 px-2">950</td>
                     <td className="py-1 px-2 text-slate-400">Monthly lease rate ($)</td>
-                  </tr>
-                  <tr>
-                    <td className="py-1 px-2 font-mono text-indigo-300">Lease Dates</td>
-                    <td className="py-1 px-2">2025-09-01</td>
-                    <td className="py-1 px-2 text-slate-400">Start & End dates</td>
                   </tr>
                 </tbody>
               </table>

@@ -7,9 +7,9 @@
  */
 export function formatCurrency(amount: number | null | undefined): string {
   if (amount === null || amount === undefined || isNaN(amount)) {
-    return '$0';
+    return '$0.00';
   }
-  return `$${Math.round(amount).toLocaleString('en-US')}`;
+  return `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 /**

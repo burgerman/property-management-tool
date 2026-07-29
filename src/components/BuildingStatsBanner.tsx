@@ -67,7 +67,7 @@ export const BuildingStatsBanner: React.FC<BuildingStatsBannerProps> = ({ stats 
           </div>
           <div className="flex items-center gap-1 mt-1.5 text-[10px] text-amber-400 font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-            <span>Yellow Card Indicator</span>
+            <span>Occupied</span>
           </div>
         </div>
 
@@ -87,7 +87,7 @@ export const BuildingStatsBanner: React.FC<BuildingStatsBannerProps> = ({ stats 
           </div>
           <div className="flex items-center gap-1 mt-1.5 text-[10px] text-emerald-400 font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-            <span>Green Card Indicator</span>
+            <span>Secured</span>
           </div>
         </div>
 
@@ -107,7 +107,7 @@ export const BuildingStatsBanner: React.FC<BuildingStatsBannerProps> = ({ stats 
           </div>
           <div className="flex items-center gap-1 mt-1.5 text-[10px] text-rose-400 font-medium">
             <span className="w-1.5 h-1.5 rounded-full bg-rose-400"></span>
-            <span>Red Card Indicator</span>
+            <span>Vacant</span>
           </div>
         </div>
 

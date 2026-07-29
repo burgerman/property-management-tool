@@ -29,12 +29,12 @@ export const TOTAL_FLOORS = VALID_FLOORS.length; // 18 Physical Floors (excludin
  * Bedroom capacity map by suite suffix code (01 through 06)
  */
 export const SUITE_BEDROOM_MAP: Record<string, number> = {
-  '01': 5,
-  '02': 4,
+  '01': 4,
+  '02': 5,
   '03': 3,
   '04': 3,
-  '05': 4,
-  '06': 5,
+  '05': 5,
+  '06': 4,
 };
 
 export const TOTAL_SUITES_PER_FLOOR = Object.keys(SUITE_BEDROOM_MAP).length; // 6 Suites per floor

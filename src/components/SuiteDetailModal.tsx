@@ -173,7 +173,7 @@ export const SuiteDetailModal: React.FC<SuiteDetailModalProps> = ({
                     {tenant ? (
                       <div>
                         <div className="text-sm font-bold text-emerald-400">
-                          ${tenant.rent.toLocaleString()} <span className="text-[10px] font-normal text-slate-400">/mo</span>
+                          ${tenant.rent.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span className="text-[10px] font-normal text-slate-400">/mo</span>
                         </div>
                         <div className="text-[11px] text-slate-400 flex items-center gap-1 justify-end mt-0.5">
                           <Calendar className="w-3 h-3 text-slate-500" />

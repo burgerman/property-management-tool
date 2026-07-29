@@ -77,11 +77,11 @@ export const ExcelDataSourceView: React.FC<ExcelDataSourceViewProps> = ({
               <FileSpreadsheet className="w-5 h-5" />
             </div>
             <h2 className="text-2xl font-bold text-white font-['Space_Grotesk'] tracking-tight">
-              Excel Data Source Manager
+              Excel Data Source
             </h2>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            Upload custom Excel workbooks (.xlsx, .xls, .csv), inspect parsed tenant records, and manage dataset state.
+            Upload custom Excel workbooks (.xlsx, .csv) and inspect parsed tenant records.
           </p>
         </div>
 
@@ -91,7 +91,7 @@ export const ExcelDataSourceView: React.FC<ExcelDataSourceViewProps> = ({
             className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 transition-all"
           >
             <RefreshCw className="w-3.5 h-3.5 text-indigo-400" />
-            <span>Refresh Excel Data</span>
+            <span>Refresh Data</span>
           </button>
 
           <button
@@ -99,7 +99,7 @@ export const ExcelDataSourceView: React.FC<ExcelDataSourceViewProps> = ({
             className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 hover:bg-slate-800 text-emerald-400 border border-emerald-500/30 transition-all"
           >
             <Download className="w-3.5 h-3.5" />
-            <span>Download Sample Excel</span>
+            <span>Download Sample</span>
           </button>
         </div>
       </div>
@@ -136,16 +136,16 @@ export const ExcelDataSourceView: React.FC<ExcelDataSourceViewProps> = ({
           </div>
 
           <h3 className="text-xl font-bold text-white font-['Space_Grotesk']">
-            {isLoading ? 'Processing Excel File...' : 'Upload Excel Workbook'}
+            {isLoading ? 'Processing File...' : 'Upload Excel File'}
           </h3>
 
           <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
-            Drag and drop your Excel file (<code className="text-emerald-300">.xlsx</code>, <code className="text-emerald-300">.xls</code>, or <code className="text-emerald-300">.csv</code>) here, or click to choose from your computer.
+            Drag and drop your Excel file (<code className="text-emerald-300">.xlsx</code>, <code className="text-emerald-300">.csv</code>) here, or click to browse.
           </p>
 
           <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/20 transition-all">
             <Upload className="w-3.5 h-3.5" />
-            <span>Select File to Upload</span>
+            <span>Select File</span>
           </div>
         </label>
 
@@ -166,17 +166,17 @@ export const ExcelDataSourceView: React.FC<ExcelDataSourceViewProps> = ({
             </div>
             <div>
               <h3 className="text-base font-bold text-white font-['Space_Grotesk']">
-                Active Excel Workbook: {isCustomData ? fileName : 'Pre-loaded Demo Building Data'}
+                Active File: {isCustomData ? fileName : 'Pre-loaded Demo Data'}
               </h3>
               <p className="text-xs text-slate-400 mt-0.5">
-                Status: <span className="text-emerald-400 font-semibold">Active Data Source</span> • Refreshed at {lastRefreshed.toLocaleTimeString()}
+                Status: <span className="text-emerald-400 font-semibold">Active</span> • Refreshed at {lastRefreshed.toLocaleTimeString()}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2 text-xs">
             <span className="px-3 py-1 rounded-full bg-slate-900 border border-slate-800 text-slate-300 font-semibold">
-              {tenants.length} Tenant Rows
+              {tenants.length} Rows
             </span>
           </div>
         </div>
@@ -187,10 +187,10 @@ export const ExcelDataSourceView: React.FC<ExcelDataSourceViewProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h3 className="text-lg font-bold text-white font-['Space_Grotesk']">
-              Parsed Tenant Records Table ({filteredTenants.length})
+              Tenant Records ({filteredTenants.length})
             </h3>
             <p className="text-xs text-slate-400">
-              Live view of all rows mapped from the active Excel workbook
+              Parsed rows from active file
             </p>
           </div>
 
@@ -219,7 +219,7 @@ export const ExcelDataSourceView: React.FC<ExcelDataSourceViewProps> = ({
             <thead className="bg-slate-900 text-slate-400 font-semibold sticky top-0 z-10 border-b border-slate-800">
               <tr>
                 <th className="py-3 px-4">Unit</th>
-                <th className="py-3 px-4">Tenant ID</th>
+                <th className="py-3 px-4">T-Code</th>
                 <th className="py-3 px-4">Name</th>
                 <th className="py-3 px-4">Email</th>
                 <th className="py-3 px-4">Phone</th>
@@ -238,7 +238,7 @@ export const ExcelDataSourceView: React.FC<ExcelDataSourceViewProps> = ({
                     <td className="py-2.5 px-4 font-semibold text-white">{t.name}</td>
                     <td className="py-2.5 px-4 text-slate-400">{t.email || '-'}</td>
                     <td className="py-2.5 px-4 text-slate-400">{t.phone || '-'}</td>
-                    <td className="py-2.5 px-4 font-semibold text-emerald-400">${t.rent.toLocaleString()}</td>
+                    <td className="py-2.5 px-4 font-semibold text-emerald-400">${t.rent.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                     <td className="py-2.5 px-4 text-slate-400">{t.leaseStartDate || '-'}</td>
                     <td className="py-2.5 px-4 text-slate-400">{t.leaseEndDate || '-'}</td>
                     <td className="py-2.5 px-4">
