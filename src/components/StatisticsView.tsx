@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { BuildingStats, Floor } from '../types';
-import { PieChart, Home, Users, ShieldCheck, DollarSign, Layers, ArrowUpRight, Filter, CheckCircle2 } from 'lucide-react';
+import { PieChart, Home, Users, ShieldCheck, DollarSign, Layers, ArrowUpRight, Filter, CheckCircle2, Download } from 'lucide-react';
+import { ExportReportModal } from './ExportReportModal';
 
 interface StatisticsViewProps {
   stats: BuildingStats;
   floors: Floor[];
+  dataSourceName?: string;
 }
 
-export const StatisticsView: React.FC<StatisticsViewProps> = ({ stats, floors }) => {
+export const StatisticsView: React.FC<StatisticsViewProps> = ({ stats, floors, dataSourceName }) => {
   const [selectedFloorRange, setSelectedFloorRange] = useState<string>('all');
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
 
   // Compute percentages
   const vacantSuitePct = Math.round((stats.vacantSuitesCount / stats.totalSuites) * 100);
@@ -41,45 +44,56 @@ export const StatisticsView: React.FC<StatisticsViewProps> = ({ stats, floors })
             </h2>
           </div>
           <p className="text-xs text-slate-400 mt-1">
-            Comprehensive occupancy stats, suite status distributions, and floor-by-floor breakdown for property management.
+            Comprehensive occupancy stats, suite status distributions, and floor-by-floor breakdown.
           </p>
         </div>
 
-        {/* Quick Filter */}
-        <div className="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800 text-xs">
-          <Filter className="w-3.5 h-3.5 text-slate-400 ml-2" />
-          <span className="text-slate-400 font-medium">Floors:</span>
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Quick Filter */}
+          <div className="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800 text-xs">
+            <Filter className="w-3.5 h-3.5 text-slate-400 ml-2" />
+            <span className="text-slate-400 font-medium">Floors:</span>
+            <button
+              onClick={() => setSelectedFloorRange('all')}
+              className={`px-3 py-1 rounded-lg font-semibold transition-all ${
+                selectedFloorRange === 'all' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              All (3–21)
+            </button>
+            <button
+              onClick={() => setSelectedFloorRange('upper')}
+              className={`px-3 py-1 rounded-lg font-semibold transition-all ${
+                selectedFloorRange === 'upper' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Upper (15–21)
+            </button>
+            <button
+              onClick={() => setSelectedFloorRange('mid')}
+              className={`px-3 py-1 rounded-lg font-semibold transition-all ${
+                selectedFloorRange === 'mid' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Mid (9–14)
+            </button>
+            <button
+              onClick={() => setSelectedFloorRange('lower')}
+              className={`px-3 py-1 rounded-lg font-semibold transition-all ${
+                selectedFloorRange === 'lower' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              Lower (3–8)
+            </button>
+          </div>
+
+          {/* Export Report Action Button */}
           <button
-            onClick={() => setSelectedFloorRange('all')}
-            className={`px-3 py-1 rounded-lg font-semibold transition-all ${
-              selectedFloorRange === 'all' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
-            }`}
+            onClick={() => setIsExportModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20 transition-all"
           >
-            All (3–21)
-          </button>
-          <button
-            onClick={() => setSelectedFloorRange('upper')}
-            className={`px-3 py-1 rounded-lg font-semibold transition-all ${
-              selectedFloorRange === 'upper' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Upper (15–21)
-          </button>
-          <button
-            onClick={() => setSelectedFloorRange('mid')}
-            className={`px-3 py-1 rounded-lg font-semibold transition-all ${
-              selectedFloorRange === 'mid' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Mid (9–14)
-          </button>
-          <button
-            onClick={() => setSelectedFloorRange('lower')}
-            className={`px-3 py-1 rounded-lg font-semibold transition-all ${
-              selectedFloorRange === 'lower' ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:text-white'
-            }`}
-          >
-            Lower (3–8)
+            <Download className="w-4 h-4" />
+            <span>Export Report</span>
           </button>
         </div>
       </div>
@@ -371,6 +385,16 @@ export const StatisticsView: React.FC<StatisticsViewProps> = ({ stats, floors })
           </table>
         </div>
       </div>
+
+      {/* Export Statistics Report Modal */}
+      <ExportReportModal
+        isOpen={isExportModalOpen}
+        onClose={() => setIsExportModalOpen(false)}
+        stats={stats}
+        floors={floors}
+        activeFloorRange={selectedFloorRange}
+        dataSourceName={dataSourceName}
+      />
     </div>
   );
 };

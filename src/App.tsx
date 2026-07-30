@@ -104,7 +104,11 @@ export const App: React.FC = () => {
         )}
 
         {activeTab === 'statistics' && (
-          <StatisticsView stats={stats} floors={floors} />
+          <StatisticsView
+            stats={stats}
+            floors={floors}
+            dataSourceName={isCustomData ? fileName : 'Pre-loaded Demo Building Data'}
+          />
         )}
 
         {activeTab === 'excel' && (

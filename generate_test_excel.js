@@ -19,25 +19,32 @@ const LAST_NAMES = [
 ];
 
 const SUITE_BEDROOM_MAP = {
-  '01': 5,
-  '02': 4,
+  '01': 4,
+  '02': 5,
   '03': 3,
   '04': 3,
-  '05': 4,
-  '06': 5,
+  '05': 5,
+  '06': 4,
 };
 
 function generateTestData() {
   const rows = [];
   let tenantCounter = 100100;
 
+  const EXCLUDED_FLOORS = [13];
+  const EXCLUDED_SUITES = ['0304'];
+
   // Generate rows for floors 3 through 21
   for (let f = 3; f <= 21; f++) {
+    if (EXCLUDED_FLOORS.includes(f)) continue;
+
     const floorStr = f.toString().padStart(2, '0');
 
     for (const [suiteIdx, bedroomCount] of Object.entries(SUITE_BEDROOM_MAP)) {
       const suiteNum = parseInt(suiteIdx, 10);
       const suiteId = `${floorStr}${suiteIdx}`;
+
+      if (EXCLUDED_SUITES.includes(suiteId)) continue;
 
       // Leave some suites vacant (Red) for testing:
       // Floor 5 Suite 03, Floor 8 Suite 01, Floor 12 Suite 04, Floor 17 Suite 03, Floor 20 Suite 06

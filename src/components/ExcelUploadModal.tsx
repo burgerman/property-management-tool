@@ -184,7 +184,7 @@ export const ExcelUploadModal: React.FC<ExcelUploadModalProps> = ({
             </div>
 
             <p className="text-xs text-slate-400">
-              The parser maps room numbers automatically from the <code className="text-indigo-300">Unit</code> column (e.g. <code className="text-indigo-300">0301-1</code> or <code className="text-indigo-300">2106-5</code>).
+              The parser maps room numbers automatically from the <code className="text-indigo-300">Unit</code> column (e.g. <code className="text-indigo-300">0301-4</code> or <code className="text-indigo-300">2105-5</code>).
             </p>
 
             <div className="overflow-x-auto">

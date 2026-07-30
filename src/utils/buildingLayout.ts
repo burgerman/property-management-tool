@@ -244,8 +244,8 @@ export function buildBuildingState(tenants: TenantRecord[]): { floors: Floor[]; 
   const averageRoomRent = totalOccupiedAndSecuredRooms > 0 ? Number((totalMonthlyRevenue / totalOccupiedAndSecuredRooms).toFixed(2)) : 0;
 
   const bedroomTypes = [
-    { type: '5-Bedroom Suites (01 & 06)', count: 5 },
-    { type: '4-Bedroom Suites (02 & 05)', count: 4 },
+    { type: '5-Bedroom Suites (02 & 05)', count: 5 },
+    { type: '4-Bedroom Suites (01 & 06)', count: 4 },
     { type: '3-Bedroom Suites (03 & 04)', count: 3 },
   ];
 

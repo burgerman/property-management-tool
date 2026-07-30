@@ -70,7 +70,7 @@ export async function parseExcelFile(file: File): Promise<ExcelParseResult> {
 
       const parsedUnit = parseUnitId(unitStr);
       if (!parsedUnit) {
-        warnings.push(`Row ${rowNum}: Invalid room identifier '${unitStr}'. Expected format like '0301-1' or '2106-5' (Floors 3-21, Suites 01-06).`);
+        warnings.push(`Row ${rowNum}: Invalid room identifier '${unitStr}'. Expected valid format like '0301-4' or '2105-5' (Floors 3-21, Suites 01-06).`);
         return;
       }
 
