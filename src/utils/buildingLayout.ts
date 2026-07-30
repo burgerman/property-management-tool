@@ -69,7 +69,16 @@ export function determineUnitStatus(
   const isTCodeEmpty = cleanTCode === '' || cleanTCode === '-';
   const isNameEmpty = cleanName === '' || cleanName === '-';
 
-  // 1. Vacant unit logic (Red):
+
+  // 1. Secured unit logic (Green):
+  // Check the fields 'T-Code' and 'Name' of the row first, if at least one of them is not empty or "",
+  // then check the field 'Status', if its value is 'Future', then the unit should be secured in green color.
+  if ((!isTCodeEmpty || !isNameEmpty) && cleanStatus === 'future') {
+    return 'secured';
+  }
+
+
+  // 2. Vacant unit logic (Red):
   // Check 'T-Code' and 'Name' of the row first, if they both empty or "",
   // the unit should be vacant in red color; otherwise check the field 'status',
   // if it's 'Notice', then the unit should be vacant in red color as well.
@@ -77,18 +86,11 @@ export function determineUnitStatus(
     return 'vacant';
   }
 
-  // 2. Occupied unit logic (Yellow):
+  // 3. Occupied unit logic (Yellow):
   // Check the fields 'T-Code' and 'Name' of the row first, if they are not empty or "",
   // then check the field 'status', if it's 'Current', then the unit should be occupied in yellow color.
   if (!isTCodeEmpty && !isNameEmpty && cleanStatus === 'current') {
     return 'occupied';
-  }
-
-  // 3. Secured unit logic (Green):
-  // Check the fields 'T-Code' and 'Name' of the row first, if at least one of them is not empty or "",
-  // then check the field 'Status', if its value is 'Future', then the unit should be secured in green color.
-  if ((!isTCodeEmpty || !isNameEmpty) && cleanStatus === 'future') {
-    return 'secured';
   }
 
   // Fallbacks for legacy/direct status values

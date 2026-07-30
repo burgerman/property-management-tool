@@ -33,8 +33,8 @@ export const SUITE_BEDROOM_MAP: Record<string, number> = {
   '02': 5,
   '03': 3,
   '04': 3,
-  '05': 5,
-  '06': 4,
+  '05': 4,
+  '06': 5,
 };
 
 export const TOTAL_SUITES_PER_FLOOR = Object.keys(SUITE_BEDROOM_MAP).length; // 6 Suites per floor

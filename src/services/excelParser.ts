@@ -100,7 +100,7 @@ export async function parseExcelFile(file: File): Promise<ExcelParseResult> {
       const birthYearRaw = rowMap['birthyear'] || rowMap['birth'] || rowMap['dobyear'] || 1995;
       const birthYear = parseInt(String(birthYearRaw), 10) || 1995;
 
-      const rentRaw = rowMap['rent'] || rowMap['monthlyrent'] || rowMap['rentamount'] || 0;
+      const rentRaw = rowMap['rent'] || rowMap['monthlyrent'] || rowMap['rentamount'] || rowMap['rentprice'] || 0;
       const rent = parseFloat(String(rentRaw).replace(/[^0-9.]/g, '')) || 0;
 
       const leaseStart = formatDate(
