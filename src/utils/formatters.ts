@@ -39,6 +39,34 @@ export function formatDate(val: unknown, fallback: string = ''): string {
 }
 
 /**
+ * Safely parse date value from Excel raw data or Date object into YYYY
+ */
+export function formatYear(val: unknown, fallback: string = ''): string {
+  if (!val) return fallback;
+
+  if (val instanceof Date) {
+    if (isNaN(val.getTime())) return fallback;
+    return String(val.getFullYear());
+  }
+
+  const str = String(val).trim();
+  if (!str) return fallback;
+
+  // Try parsing as a date string
+  const date = new Date(str);
+  if (!isNaN(date.getTime())) {
+    return String(date.getFullYear());
+  }
+
+  // If already a year like "2024"
+  if (/^\d{4}$/.test(str)) {
+    return str;
+  }
+
+  return fallback;
+}
+
+/**
  * Capitalize first letter of string
  */
 export function capitalize(str: string): string {

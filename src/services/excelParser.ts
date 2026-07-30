@@ -1,7 +1,7 @@
 import * as XLSX from 'xlsx';
 import { ExcelParseResult, TenantRecord } from '../types';
 import { parseUnitId } from '../utils/buildingLayout';
-import { formatDate, getErrorMessage } from '../utils/formatters';
+import { formatDate, formatYear, getErrorMessage } from '../utils/formatters';
 
 /**
  * Flexible column key normalization helper
@@ -103,12 +103,12 @@ export async function parseExcelFile(file: File): Promise<ExcelParseResult> {
       const rentRaw = rowMap['rent'] || rowMap['monthlyrent'] || rowMap['rentamount'] || rowMap['rentprice'] || 0;
       const rent = parseFloat(String(rentRaw).replace(/[^0-9.]/g, '')) || 0;
 
-      const leaseStart = formatDate(
+      const leaseStart = formatYear(
         rowMap['leasestartdate'] || rowMap['leasestart'] || rowMap['startdate'],
         '2025-09-01'
       );
 
-      const leaseEnd = formatDate(
+      const leaseEnd = formatYear(
         rowMap['leaseenddate'] || rowMap['leaseend'] || rowMap['enddate'],
         '2026-08-31'
       );
@@ -126,7 +126,7 @@ export async function parseExcelFile(file: File): Promise<ExcelParseResult> {
         const val = row[originalKey];
         if (val !== undefined && val !== null && val !== '') {
           if (val instanceof Date) {
-            extraFields[originalKey] = formatDate(val);
+            extraFields[originalKey] = formatYear(val);
           } else {
             extraFields[originalKey] = val;
           }

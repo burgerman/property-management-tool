@@ -12,8 +12,8 @@ export interface TenantRecord {
   phone: string;          // e.g. "555-123-4567"
   birthYear: number;      // e.g. 1998
   rent: number;           // e.g. 950
-  leaseStartDate: string; // e.g. "2025-09-01"
-  leaseEndDate: string;   // e.g. "2026-08-31"
+  leaseStartDate: string; // e.g. "2025"
+  leaseEndDate: string;   // e.g. "2026"
   status?: string;        // e.g. "Notice", "Current", "Future"
   extraFields?: Record<string, unknown>; // Stores all dynamic raw key-value pairs from Excel row
 }
