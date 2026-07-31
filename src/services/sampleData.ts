@@ -64,10 +64,8 @@ export function generateSampleTenants(): TenantRecord[] {
         const baseRent = 850.50 + (f * 15.25) + (r * 25.75);
         const rent = Number(baseRent.toFixed(2));
 
-        const startYear = 2025;
-        const startMonth = ((f + r) % 12) + 1;
-        const leaseStart = `${startYear}-${startMonth.toString().padStart(2, '0')}-01`;
-        const leaseEnd = `${startYear + 1}-${startMonth.toString().padStart(2, '0')}-31`;
+        const leaseStart = '2025';
+        const leaseEnd = '2026';
 
         const status = isSecuredSuite ? 'Future' : (r === 2 && f % 3 === 0) ? 'Notice' : 'Current';
 

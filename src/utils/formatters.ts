@@ -39,7 +39,7 @@ export function formatDate(val: unknown, fallback: string = ''): string {
 }
 
 /**
- * Safely parse date value from Excel raw data or Date object into YYYY
+ * Safely parse date value from Excel raw data, Date object, or date string into YYYY
  */
 export function formatYear(val: unknown, fallback: string = ''): string {
   if (!val) return fallback;
@@ -52,15 +52,15 @@ export function formatYear(val: unknown, fallback: string = ''): string {
   const str = String(val).trim();
   if (!str) return fallback;
 
-  // Try parsing as a date string
+  // Extract 4-digit year like "2025" from "2025-09-01" or "2025"
+  const match = str.match(/\b(19|20)\d{2}\b/);
+  if (match) {
+    return match[0];
+  }
+
   const date = new Date(str);
   if (!isNaN(date.getTime())) {
     return String(date.getFullYear());
-  }
-
-  // If already a year like "2024"
-  if (/^\d{4}$/.test(str)) {
-    return str;
   }
 
   return fallback;

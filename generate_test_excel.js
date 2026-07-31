@@ -92,10 +92,8 @@ function generateTestData() {
           status = 'Notice';
         }
 
-        const month = ((f + r) % 12) + 1;
-        const monthStr = month.toString().padStart(2, '0');
-        const leaseStart = `2025-${monthStr}-01`;
-        const leaseEnd = `2026-${monthStr}-31`;
+        const leaseStart = '2025';
+        const leaseEnd = '2026';
 
         rows.push({
           'Unit': `${suiteId}-${r}`,

@@ -1,7 +1,7 @@
 import * as XLSX from 'xlsx';
 import { ExcelParseResult, TenantRecord } from '../types';
 import { parseUnitId } from '../utils/buildingLayout';
-import { formatDate, formatYear, getErrorMessage } from '../utils/formatters';
+import { formatYear, getErrorMessage } from '../utils/formatters';
 
 /**
  * Flexible column key normalization helper

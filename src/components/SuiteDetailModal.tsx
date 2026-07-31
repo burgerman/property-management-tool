@@ -1,6 +1,7 @@
 import React from 'react';
 import { Room, Suite, TenantRecord } from '../types';
 import { X, Bed, ShieldCheck, UserCheck, AlertCircle, DollarSign, Calendar, Mail, Phone, ChevronRight } from 'lucide-react';
+import { formatYear } from '../utils/formatters';
 
 interface SuiteDetailModalProps {
   suite: Suite | null;
@@ -102,6 +103,9 @@ export const SuiteDetailModal: React.FC<SuiteDetailModalProps> = ({
           {rooms.map((room) => {
             const isVacant = room.status === 'vacant';
             const tenant = room.tenant;
+            const startYear = tenant ? formatYear(tenant.leaseStartDate) : '';
+            const endYear = tenant ? formatYear(tenant.leaseEndDate) : '';
+            const leaseYears = startYear && endYear ? `${startYear} - ${endYear}` : (startYear || endYear);
 
             return (
               <div
@@ -175,10 +179,12 @@ export const SuiteDetailModal: React.FC<SuiteDetailModalProps> = ({
                         <div className="text-sm font-bold text-emerald-400">
                           ${tenant.rent.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} <span className="text-[10px] font-normal text-slate-400">/mo</span>
                         </div>
-                        <div className="text-[11px] text-slate-400 flex items-center gap-1 justify-end mt-0.5">
-                          <Calendar className="w-3 h-3 text-slate-500" />
-                          Lease ends {tenant.leaseEndDate}
-                        </div>
+                        {leaseYears && (
+                          <div className="text-[11px] text-slate-400 flex items-center gap-1 justify-end mt-0.5">
+                            <Calendar className="w-3 h-3 text-slate-500" />
+                            {leaseYears}
+                          </div>
+                        )}
                       </div>
                     ) : (
                       <span className="text-xs text-slate-500 italic">No Active Lease</span>
